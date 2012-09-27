@@ -8,11 +8,11 @@ Original Author is [Tomaž Muraus](http://www.tomaz-muraus.info) I just fixed so
 Requirements
 -----------
 
-Windows / Linux / Mac
-Python >= 2.6 (< 3.0)
-Python cURL interface - [pycURL](http://pycurl.sourceforge.net/)
-Reportlab PDF library - [reportlab](http://www.reportlab.org/oss/rl-toolkit/download/)
-Python iCalendar library - [VObject](http://vobject.skyhouseconsulting.com/)
+* Windows / Linux / Mac
+* Python >= 2.6 (< 3.0)
+* Python cURL interface - [pycURL](http://pycurl.sourceforge.net/)
+* Reportlab PDF library - [reportlab](http://www.reportlab.org/oss/rl-toolkit/download/)
+* Python iCalendar library - [VObject](http://vobject.skyhouseconsulting.com/)
 
 
 Usage
