@@ -34,8 +34,8 @@ def parseHtml(data):
     
         if data != None:
             # Lecture
-            lecture = data.group(1)
-            professor = data.group(4)
+            lecture = data.group(1).decode("cp1250")
+            professor = data.group(4).decode("cp1250")
             location = data.group(3)
     
         lectureData = [lecture, professor, location, start - 1, start + length - 1]

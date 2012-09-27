@@ -183,7 +183,7 @@ def generateTxt(startDate, endDate, data):
             
             if len(data[key]) > 0:
                 line = '%s: ' % (days[key - 1])
-                line += ', ' . join('%s (%s) - %s - %s - %s' % (lecture[0].decode('cp1250'), lecture[1].decode('cp1250'), lecture[2], hours[lecture[3]], hours[lecture[4]]) for lecture in data[key])
+                line += ', ' . join('%s (%s) - %s - %s - %s' % (lecture[0], lecture[1], lecture[2], hours[lecture[3]], hours[lecture[4]]) for lecture in data[key])
                 line += '\n'
                 
                 file.write(line)
@@ -223,7 +223,7 @@ def generatePdf(startDate, endDate, data):
     
             # Found a lecture which is on schedule this hour
             if len(match) == 1:
-                data1.append(unicode(match[0][0] + '\n' + match[0][1] + '\n' + match[0][2], 'utf-8', 'ignore'))
+                data1.append(match[0][0] + u'\n' + match[0][1] + u'\n' + match[0][2])
             else:
                 data1.append('')
                 
@@ -258,7 +258,7 @@ def generateIcal(startDate, endDate, data):
                 date = startDate + delta
 
                 event = cal.add('vevent')
-                event.add('summary').value = '%s (%s)' % (lecture[0].decode('cp1250'), lecture[1].decode('cp1250'))
+                event.add('summary').value = '%s (%s)' % (lecture[0], lecture[1])
                 event.add('location').value = 'FERI - %s' % (lecture[2])
                 event.add('dtstart').value = datetime.datetime(date.year, date.month, date.day, int(hours[lecture[3]][:2]), int(hours[lecture[3]][3:]), 0, tzinfo = local_tz)
                 event.add('dtend').value = datetime.datetime(date.year, date.month, date.day, int(hours[lecture[4]][:2]), int(hours[lecture[4]][3:]), tzinfo = local_tz)
