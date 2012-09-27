@@ -20,6 +20,7 @@ import json
 import sys
 import datetime
 import codecs
+from dateutil.tz import gettz
 
 import pycurl
 import vobject
@@ -41,7 +42,7 @@ branchesUrl = 'http://www.feri.uni-mb.si/urniki/lib/helper.asp?type=year&program
 groupsUrl = 'http://www.feri.uni-mb.si/urniki/lib/helper.asp?type=branch&branch_id=%s'
 
 days = ['Ponedeljek', 'Torek', 'Sreda', 'Cetrtek', 'Petek', 'Sobota']
-hours = sum([[('0' + str(i) if i < 10 else str(i)) + ":00", ('0' + str(i) if i < 10 else str(i)) + ":30"] for i in range(7, 21)], [])
+hours = sum([[('0' + str(i) if i < 10 else str(i)) + ":00", ('0' + str(i) if i < 10 else str(i)) + ":30"] for i in range(7, 22)], [])
 
 def getPrograms():
     response = StringIO.StringIO()
@@ -159,8 +160,10 @@ def getTimetable(date, programId, year, branchId):
 
 def generateTimetable(format, date, programId, year, branchId):
     timetable = getTimetable(date, programId, year, branchId)
-    
-    if timetable != False:
+
+    if timetable == False:
+        return False
+    else:
         (startDate, endDate, data) = parse.parseHtml(timetable)
 
     if format == 'txt':
@@ -246,6 +249,7 @@ def generateIcal(startDate, endDate, data):
     startDate = datetime.date(int(startDate[6:]), int(startDate[3:5]), int(startDate[:2]))
       
     cal = vobject.iCalendar()
+    local_tz = gettz("Europe/Ljubljana")
     for key in data:
         if len(data[key]) > 0:
                 
@@ -254,14 +258,14 @@ def generateIcal(startDate, endDate, data):
                 date = startDate + delta
 
                 event = cal.add('vevent')
-                event.add('summary').value = '%s (%s)' % (unicode(lecture[0], 'utf-8', 'ignore'), unicode(lecture[1], 'utf-8', 'ignore'))
+                event.add('summary').value = '%s (%s)' % (lecture[0].decode('cp1250'), lecture[1].decode('cp1250'))
                 event.add('location').value = 'FERI - %s' % (lecture[2])
-                event.add('dtstart').value = datetime.datetime(date.year, date.month, date.day, int(hours[lecture[3]][:2]), int(hours[lecture[3]][3:]), 0, tzinfo = vobject.icalendar.utc)
-                event.add('dtend').value = datetime.datetime(date.year, date.month, date.day, int(hours[lecture[4]][:2]), int(hours[lecture[4]][3:]), tzinfo = vobject.icalendar.utc)
-    
+                event.add('dtstart').value = datetime.datetime(date.year, date.month, date.day, int(hours[lecture[3]][:2]), int(hours[lecture[3]][3:]), 0, tzinfo = local_tz)
+                event.add('dtend').value = datetime.datetime(date.year, date.month, date.day, int(hours[lecture[4]][:2]), int(hours[lecture[4]][3:]), tzinfo = local_tz)
+
     icalstream = cal.serialize()
 
-    with codecs.open(fileName, 'w', 'ascii') as file:
+    with open(fileName, 'w') as file:
         file.write(icalstream)
                 
     return fileName
