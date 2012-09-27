@@ -177,13 +177,13 @@ def generateTimetable(format, date, programId, year, branchId):
 
 def generateTxt(startDate, endDate, data):
     fileName = 'timetable_%s-%s.txt' % (startDate, endDate)
-    
-    with open(fileName, 'w') as file:
+
+    with codecs.open(fileName, 'w', "utf-8") as file:
         for key in data:
             
             if len(data[key]) > 0:
                 line = '%s: ' % (days[key - 1])
-                line += ', ' . join('%s (%s) - %s - %s - %s' % (lecture[0], lecture[1], lecture[2], hours[lecture[3]], hours[lecture[4]]) for lecture in data[key])
+                line += ', ' . join('%s (%s) - %s - %s - %s' % (lecture[0].decode('cp1250'), lecture[1].decode('cp1250'), lecture[2], hours[lecture[3]], hours[lecture[4]]) for lecture in data[key])
                 line += '\n'
                 
                 file.write(line)
